@@ -6,7 +6,7 @@
         </section>
         <h1>Make groups</h1>
         <section>        
-            <groupplayer v-for="player in players" :key="player.uid" :player="player" @setColor="setColor" @deleteAssignedPlayer="deleteAssignedPlayer"/>
+            <groupplayer v-for="player in thePlayers" :key="player.uid" :player="player" @setColor="setColor" @deleteAssignedPlayer="deleteAssignedPlayer"/>
         </section>
         <section>
             <a href="#" @click="submitGroups">X</a>
@@ -21,18 +21,20 @@ export default {
     data() {
         return {
             teams: [],
+            thePlayers: [],
+            localPlayers: [],
             result: false
         }
-    },
-    beforeCreate() {
-      this.$store.dispatch('getTeamPlayersFromDb');
+    }, 
+    mounted() {
+        this.getLocalStorage();
     },
     components : {
         groupplayer
     },
     computed: {
         players () {
-             return this.$store.getters.getTeamPlayers;
+            return this.$store.getters.getTeamPlayers;
         },
         numberOfTeams() {
             return this.$store.getters.getNumberOfTeams;
@@ -46,21 +48,24 @@ export default {
                         this.result = true                                      
                         var a = this.teams.indexOf(this.teams[i])               
                         this.teams.splice(a, 1)                                 
-                        this.teams.push({number: num, uid: player.uid, name: player.name})              
+                        this.teams.push({number: num, uid: player.uid, name: player.name})                            
                     } else {
                         this.result = false                                     
                    }               
                 } 
-           if(this.result === false) {                                          
-               this.teams.push({number: num, uid: player.uid, name: player.name})                       
-           }
+            if(this.result === false) {                                          
+                this.teams.push({number: num, uid: player.uid, name: player.name})
+                this.localPlayers.push({uid: player.uid, name: player.name})                                
+            }
             this.result = false                                                 
 
            } else {
-               this.teams.push({number: num, uid: player.uid, name: player.name})                          
+               this.teams.push({number: num, uid: player.uid, name: player.name}) 
+               this.localPlayers.push({uid: player.uid, name: player.name})            
            }
         },
         submitGroups () {
+            this.saveToLocalStorage();
             this.$store.dispatch('submitGroups', this.teams);
             this.$store.dispatch('submitSchedules');
             this.$router.push('/groups')
@@ -77,14 +82,14 @@ export default {
         },
         shufflePlayers() {
             let num = 1; 
-            this.shuffle(this.players)
+            this.shuffle(this.thePlayers)
 
-            for(let i = 0; i < this.players.length; i++) {                
+            for(let i = 0; i < this.thePlayers.length; i++) {                
                 num++
                 if(num > this.numberOfTeams) {
                     num = 1;
                 }                           
-                this.teams.push({number: num, uid: this.players[i].uid, name: this.players[i].name})  
+                this.teams.push({number: num, uid: this.thePlayers[i].uid, name: this.thePlayers[i].name})  
             } 
             this.$store.dispatch('submitGroups', this.teams);
             this.$router.push('/groups')          
@@ -98,7 +103,17 @@ export default {
                 a[j] = x;
             }
             return a;
-        }
+        },
+        saveToLocalStorage() {
+            localStorage.setItem('localPlayers', JSON.stringify(this.localPlayers));
+        },
+        getLocalStorage() {
+            if (localStorage.getItem('localPlayers')) {
+                this.thePlayers = JSON.parse(localStorage.getItem('localPlayers')); 
+            } else {
+                this.thePlayers = this.players;
+            }     
+        }   
     }
 }
 </script>

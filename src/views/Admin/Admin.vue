@@ -19,6 +19,9 @@
 
 <script>
 export default {
-    name : 'admin'
+    name : 'admin',
+    beforeCreate() {
+        this.$store.dispatch('getTeamPlayersFromDb');
+    },
 }
 </script>
