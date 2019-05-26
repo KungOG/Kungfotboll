@@ -34,10 +34,10 @@ export default {
     },
     methods: {
         checkWinners() {
-            if (localStorage.getItem('winner')) {
-            this.winner = JSON.parse(localStorage.getItem('winner')); 
+            if  (localStorage.getItem('winner')) {
+                this.winner = JSON.parse(localStorage.getItem('winner')); 
             }
-            if(this.winner.length == this.games.length) {
+            if  (this.winner.length == this.games.length) {
                 this.show = true
             } else {
                 this.show = false

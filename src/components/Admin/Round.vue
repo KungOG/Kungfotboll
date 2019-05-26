@@ -52,7 +52,7 @@ export default {
         addWinner(num) {
             //Hämta en uppdaterad array från local storage
             if (localStorage.getItem('winner')) {
-            this.winner = JSON.parse(localStorage.getItem('winner')); 
+                this.winner = JSON.parse(localStorage.getItem('winner')); 
             }
             //kolla om arrayen har ett innehåll
             if (!this.winner.length == 0) {                                       
