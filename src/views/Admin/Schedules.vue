@@ -3,17 +3,19 @@
         <h1>Spel Schema</h1>
         <round class="schema" v-for="(game, index) in games" :key="index" :game="game" @checkWinners="checkWinners"></round>
         <section>
-            <a href="#" v-if="show">Spara resultaten</a>
+            <a href="#" v-if="show" @click="saveResult">Spara resultaten</a>
         </section>
     </main>
 </template>
 
 <script>
 import round from '@/components/Admin/Round.vue';
+import {calculatePoints} from '@/mixins/calculatePoints.js';
 import db from '@/firebaseInit'
 
 export default {
     name : 'schedules',
+    mixins : [calculatePoints],
     components: {
         round
     },
@@ -21,15 +23,22 @@ export default {
         return {
             games: [],
             winner: [],
-            show: false            
+            groups: [],
+            show: false
         }
-    },  
-    mounted() {       
-        var item = db.collection('games').doc('skogaby').collection('currentGame').doc('oq0GBtqK2oskbDMN9wrA')
+    },
+ 
+    mounted() {
+        /* 
+        ! Måste fixas 
+        */       
+        var item = db.collection('games').doc('skogaby').collection('currentGame').doc('G3TpAmlbcrbQvlI1bdQy')
         
         item.get().then((doc) => {
             var game = doc.data().games
+            var groups = doc.data().groups
             this.games = game
+            this.groups = groups
         })               
     },
     methods: {
@@ -42,9 +51,22 @@ export default {
             } else {
                 this.show = false
             }
+        },
+        saveResult () {
+            this.$store.dispatch('getTeamPlayersFromDb');
+            //spara resultatet i databasen
+            var gameData = {
+                currentGame: this.groups,
+                winners: this.winner
+            }
+            this.$store.dispatch('saveResult', gameData)
+
+            /*
+             * Spara spelarens poäng
+             ! Funktion finns i CalculatePoint.js
+            */
+            this.savePoints();
         }
     }
 }
 </script>
-
-

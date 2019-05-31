@@ -166,7 +166,7 @@ export default {
         team1 = theteams[Math.ceil(no2 - j -1)]
         team2 = theteams[Math.ceil(no2 + j)]
         count++
-        teamArray.push({round: count, nr1: team1, nr2: team2, winner: null})
+        teamArray.push({round: count, nr1: team1, nr2: team2})
       }
 
     var tmp = theteams[1]
@@ -183,11 +183,60 @@ export default {
 
   /* Spara grupperna och matcherna i databasen för att kunna hämta */
   saveGameDataToDb (ctx, teams) {
-    let date = new Date()
     let groups = this.state.groups;
     var adminTeam = this.state.currentUser.teams[0];
-    var gameData = {date: date, groups: groups, games: teams}
+    var gameData = {groups: groups, games: teams}
     db.collection('games').doc(adminTeam).collection('currentGame').doc().set(gameData);
     console.log('Success!')
+  },
+  
+  /* Spara resultaten i databasen */
+  saveResult (ctx, payload) {
+    console.log(payload)
+    let date = new Date()
+    var adminTeam = this.state.currentUser.teams[0];
+    var gameData = {
+      date: date,
+      games: payload.winners,
+      groups: payload.currentGame
+    }
+    /* db.collection('games').doc(adminTeam).collection('games').doc().set(gameData); */
+  },
+  
+  /* Räkna ut poäng per spelare */
+  calculatePoints (ctx, payload) {
+    var adminTeam = this.state.currentUser.teams[0];
+    let teamPlayers = this.state.teamPlayers;
+    let players = [];
+
+    for(let i = 0; i < payload.length; i++) {
+      for(let j = 0; j < teamPlayers.length; j++) {
+        if(payload[i].uid === teamPlayers[j].uid) {
+          players.push({        
+              uid: payload[i].uid, 
+              point : teamPlayers[j].point + payload[i].point, 
+              win: teamPlayers[j].win + payload[i].win, 
+              loss: teamPlayers[j].loss + payload[i].loss, 
+              tie: teamPlayers[j].tie + payload[i].tie,
+              goal: 0,
+              name: teamPlayers[j].name            
+          }) 
+        }
+
+      }
+    }
+    var batch = db.batch();
+
+    for(let p = 0; p < players.length; p++) {
+      batch.update(db.collection('teams').doc(adminTeam).collection('players').doc(players[p].uid), players[p]);
+    }
+  
+    batch.commit().then(function() {
+      console.log("Document successfully written!");
+  })
+  .catch(function(error) {
+      console.error("Error writing document: ", error);
+  });
+    console.log('done')
   }
 }
