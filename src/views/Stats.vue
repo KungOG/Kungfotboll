@@ -5,7 +5,7 @@
             <thead>
                 <tr>
                     <td @click="$router.push('/gameschedule')">Spel Schema | </td>
-                    <td @click="$router.push('/group')"> Grupper | </td>
+                    <td @click="$router.push('/gamegroup')"> Grupper | </td>
                     <td @click="$router.push('/highscore')"> highscore</td>
                 </tr>
             </thead>
@@ -20,8 +20,7 @@
 </template>
 
 <script>
-import db from '@/firebaseInit'
-
+import db from '@/firebaseInit';
 export default {
     name : 'stats',
     data() {
@@ -29,6 +28,14 @@ export default {
             selectedTeam: '',
             teams: [],
         }
+    },
+    computed: {
+        currentUser() {
+            return this.$store.getters.getCurrentUser;
+        },
+        firstTeam() {
+            return this.$store.getters.getCurrentUser.teams[0];
+      }
     },
     methods: {
         //Send chosen team to store 
@@ -39,6 +46,9 @@ export default {
     },
     mounted() {
         //Get all teams from database for dropdown
+        this.selectedTeam = this.firstTeam;
+        this.$store.dispatch('specificTeamData');
+        this.$store.dispatch('getCurrentGame');
         var teams = [];
         db.collection("teams").get().then(function(querySnapshot) {            
             querySnapshot.forEach(function(doc) {

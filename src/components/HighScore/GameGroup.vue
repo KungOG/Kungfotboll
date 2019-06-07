@@ -1,33 +1,35 @@
-<template>
-    <article class="aboutContent">
+<template> 
+    <article>
         <Calender @changeDate="changeDate"/>
-        <section class="schema">
-            <div v-for="(game, index) in games" :key="index" :game="game">
-                <span>{{ game.home.groupNr }}</span> - <span> {{ game.away.groupNr }}</span>
-            </div>
+        <section v-for="group in groups" :key="group.id">
+            <h3 v-if="group.players[0]">{{group.name}}</h3>
+            <group :group="group.players" />
         </section>
     </article>
 </template>
 
 <script>
 import db from '@/firebaseInit';
+import group from '@/components/Admin/Group.vue';
 import Calender from '@/components/HighScore/Calender.vue';
+
 export default {
-    name : 'gameschedule',
+    name : 'gamegroup',
     components: {
+        group,
         Calender
     },
     data () {
         return {
-            games: [],
+            groups: [],
         }
     },
     mounted () {
-        this.games = this.currentGame;
+        this.groups = this.currentGame;
     },
     computed: {
         currentGame() {
-            return this.$store.state.currentGame.games;
+            return this.$store.state.currentGame.groups;
         },
         specificTeamData() {
             return this.$store.getters.filterDate;
@@ -35,8 +37,9 @@ export default {
     },
     methods: {
         changeDate() {
-            this.games = this.specificTeamData.games;
+            this.groups = this.specificTeamData.groups;
         }
+
     },
 }
 </script>

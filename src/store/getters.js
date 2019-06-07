@@ -71,5 +71,33 @@ export default {
   groupFive(state) {
     return state.groups[5].players;
   },
+
+  filterDate(state) {
+    let games = state.specificTeamData;
+    let date = state.date;
+    let time = state.time;
+    let matchDate = [];
+
+    for(let i = 0; i < games.length; i++) {
+      if( games[i].date === date && games[i].time === time) {
+        console.log('match')
+        matchDate.push(games[i])
+      }
+    }
+    return matchDate[1];
+  },
+  filterTime(state) {
+    let games = state.specificTeamData;
+    let date = state.date;
+    let matchDate = [];
+
+    for(let i = 0; i < games.length; i++) {
+      if( games[i].date === date) {
+        console.log('match')
+        matchDate.push(games[i])
+      }
+    }
+    return matchDate;
+  }
   
 }

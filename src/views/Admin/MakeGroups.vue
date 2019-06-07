@@ -26,6 +26,7 @@ export default {
     },
     beforeCreate() {
       this.$store.dispatch('getTeamPlayersFromDb');
+      this.$store.dispatch('clearGroups');
     },
     components : {
         groupplayer
@@ -62,7 +63,6 @@ export default {
         },
         submitGroups () {
             this.$store.dispatch('submitGroups', this.teams);
-            this.$store.dispatch('submitSchedules');
             this.$router.push('/groups')
         },
         deleteAssignedPlayer(id) {

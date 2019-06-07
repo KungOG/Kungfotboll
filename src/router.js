@@ -61,16 +61,21 @@ const router = new Router({
             component: () => import('./components/HighScore/GameSchedule.vue')
           },
           {
-            path: '/group',
-            name: 'group',
-            component: () => import('./components/HighScore/Group.vue')
+            path: '/gamegroup',
+            name: 'gamegroup',
+            component: () => import('./components/HighScore/GameGroup.vue')
           },
           {
             path: '/highscore',
             name: 'highscore',
             component: () => import('./components/HighScore/HighScore.vue')
-          }
+          },
         ]
+      },
+    {
+      path: '/calender',
+      name: 'calender',
+      component: () => import('./components/HighScore/Calender.vue') 
     },
     {
       path: '/admin',

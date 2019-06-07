@@ -47,7 +47,7 @@ export default {
     })
   },
 
-  /* */
+  /* Spara användaren i Databasen */
   addUserToDb(ctx, user) {
     db.collection('users').doc(user.uid).set(user)
   },
@@ -63,6 +63,8 @@ export default {
     var uid = this.state.currentUser.uid;
     db.collection('users').doc(uid).update({name:name});
   },
+
+  /* Valen i skapandet av spelet */
   setNumberOfTeams(ctx, num) {
     ctx.commit('setNumberOfTeams', num);
   },
@@ -97,29 +99,76 @@ export default {
     db.collection('teams').doc(adminTeam).collection('players').doc(player).delete();
   },
 
-   /* Ta bort spelaren ifrån store */
-   deletePlayer(ctx, player) {
+  /* Ta bort spelaren ifrån store */
+  deletePlayer(ctx, player) {
     ctx.commit('deletePlayer', player);
   },
   
   /* Ta bort spelaren ifrån laget */
   deleteGroupPlayer(ctx, payload) {
-   ctx.commit('deleteGroupPlayer', payload);
- },
+    ctx.commit('deleteGroupPlayer', payload);
+  },
 
   /* Lägg till spelare till gruppen */
   addGroupPlayer(ctx, payload) {
-  ctx.commit('addGroupPlayer', payload);
- },
- 
+    ctx.commit('addGroupPlayer', payload);
+  },
+
+  /* Ta bort spelare från annan grupp */
+  removeGroupPlayer(ctx, payload) {
+    ctx.commit('removeGroupPlayer', payload);
+  },
+
+  /* Töm grupperna innan grupperna görs */
+  clearGroups(ctx) {
+    ctx.commit('clearGroups');
+  }, 
+
   /* Ändra en spelare ifrån admins lag */
   remakePlayerFromTeam (ctx, player) {
     var adminTeam = this.state.currentUser.teams[0];
     db.collection('teams').doc(adminTeam).collection('players').doc(player.uid).set(player);
   },
 
+  /* Valt lag av användaren */
   setSelectedTeam(ctx, team) {
     ctx.commit('setSelectedTeam', team)
+  },
+
+  /* Hämta senste spelet */
+  getCurrentGame(ctx) {
+    var selectedTeam = this.state.selectedTeam;
+    var item = db.collection('games').doc(selectedTeam).collection('currentGame').doc('1')     
+    item.get().then((doc) => {
+        var game = doc.data()
+        ctx.commit('setCurrentGame', game)
+    })
+  },
+
+  /* Hämta data ifrån ett specifikt lag */
+  async specificTeamData (ctx) {
+    var selectedTeam = this.state.selectedTeam;
+    var games = [];
+    var item = await db.collection('games').doc(selectedTeam).collection('games')
+    await item.get().then((querySnapshot) => {
+      querySnapshot.forEach((doc) => {
+        var obj = (doc.id, " => ", doc.data())
+        games.push(obj)
+      })
+    })  
+    ctx.commit('setSpecificTeamData', games)  
+  },
+
+  /* Spara antal, lag, spel och poäng i local storage */
+  setGameSettings() {
+    let settings = {
+      numberOfGames: this.state.numberOfGames,
+      numberOfTeams: this.state.numberOfTeams,
+      numberOfWin: this.state.numberOfWin,
+      numberOfEqual: this.state.numberOfEqual,
+      numberOfLoss: this.state.numberOfLoss
+    }
+    localStorage.setItem('gameSettings', JSON.stringify(settings));
   },
 
   /* Sortera spelarna i grupperna */
@@ -143,42 +192,46 @@ export default {
 
   /* Skapa spelschemat */
   submitSchedules (ctx) {
-    var teams = 5; //this.state.numberOfTeams
-    var teamArray = []
-    
-    if(teams %2 !=0) {
-      teams++
-    } 
-   
-    var no2 = (teams-1)/2;
-    
-    var theteams = [];
+
+    let teams = this.state.numberOfTeams;
+    let games = this.state.numberOfGames;
+    let counter = 1;
+    let schedule = [];
+    let teamsArray = [];
+ 
+    /* Gör en array med antal lag */
     for(let i = 0; i<teams; i++) {
-      theteams[i] = i+1;
-    }
-    console.log(theteams)
-    var team1;
-    var team2;
-    var count = 0;
-
-    for(let x = 0; x < 5; x++) {
-      for(let j = 0; j<no2; j++) {
-        team1 = theteams[Math.ceil(no2 - j -1)]
-        team2 = theteams[Math.ceil(no2 + j)]
-        count++
-        teamArray.push({round: count, nr1: team1, nr2: team2})
+      teamsArray[i] = i+1;
+    }  
+    /* Sätt ihop vem som möter vem */
+    for(let i = 0; i < teamsArray.length-1; i++) {      
+      for(let j = counter; j < teamsArray.length; j++) {
+        var num1 = teamsArray.slice(i,i+1)
+        var num2 = teamsArray.slice(j,j+1)
+        for(let g = 0; g < games; g++) {  
+          if(g % 2 ) {
+            schedule.push({round: 0, home: {groupNr: num1[0], win: 0}, away: {groupNr: num2[0], win:0}})            
+          } else {
+            schedule.push({round: 0, home: {groupNr: num2[0], win: 0}, away: {groupNr: num1[0], win: 0}})
+          }
+        }
       }
-
-    var tmp = theteams[1]
-
-    for(let k = 1; k < theteams.length-1; k++) {
-      theteams[k] = theteams[k+1]
-    }
-      theteams[theteams.length-1] = tmp
-    }
-    console.log(teamArray)
-     
-    ctx.dispatch('saveGameDataToDb', teamArray)
+      counter++;
+    }    
+    /* Shuffla arrayen */
+    var j, x, i;
+    for (i = schedule.length - 1; i > 0; i--) {
+        j = Math.floor(Math.random() * (i + 1));
+        x = schedule[i];
+        schedule[i] = schedule[j];
+        schedule[j] = x;
+    }    
+    /* Addera roundnummer  */ 
+    for(let i = 0; i < schedule.length; i++) {
+      schedule[i].round = i+1;
+    }    
+   
+    ctx.dispatch('saveGameDataToDb', schedule) 
   },
 
   /* Spara grupperna och matcherna i databasen för att kunna hämta */
@@ -186,24 +239,27 @@ export default {
     let groups = this.state.groups;
     var adminTeam = this.state.currentUser.teams[0];
     var gameData = {groups: groups, games: teams}
-    db.collection('games').doc(adminTeam).collection('currentGame').doc().set(gameData);
+    db.collection('games').doc(adminTeam).collection('currentGame').doc('1').set(gameData);
     console.log('Success!')
   },
   
   /* Spara resultaten i databasen */
   saveResult (ctx, payload) {
-    console.log(payload)
-    let date = new Date()
+    let newDate = new Date()    
+    var date = newDate.toISOString().slice(0,10);
+    let time = newDate.toISOString().slice(11, 16);
+
     var adminTeam = this.state.currentUser.teams[0];
     var gameData = {
       date: date,
+      time: time,
       games: payload.winners,
       groups: payload.currentGame
     }
-    /* db.collection('games').doc(adminTeam).collection('games').doc().set(gameData); */
+     db.collection('games').doc(adminTeam).collection('games').doc().set(gameData); 
   },
   
-  /* Räkna ut poäng per spelare */
+  /* Addera spelarnas nya poäng med de gamla */
   calculatePoints (ctx, payload) {
     var adminTeam = this.state.currentUser.teams[0];
     let teamPlayers = this.state.teamPlayers;
@@ -229,14 +285,21 @@ export default {
 
     for(let p = 0; p < players.length; p++) {
       batch.update(db.collection('teams').doc(adminTeam).collection('players').doc(players[p].uid), players[p]);
-    }
-  
+    }  
     batch.commit().then(function() {
       console.log("Document successfully written!");
-  })
-  .catch(function(error) {
-      console.error("Error writing document: ", error);
-  });
-    console.log('done')
+    })
+    .catch(function(error) {
+        console.error("Error writing document: ", error);
+    });
+      console.log('done')
+  },
+
+  /* Spara datumet och tiden i Store och Mutations */
+  saveDate(ctx, payload) {
+    ctx.commit('setDate', payload)
+  },
+  saveTime(ctx, payload) {
+    ctx.commit('setTime', payload)
   }
 }

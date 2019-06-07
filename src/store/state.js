@@ -1,11 +1,22 @@
 export default {
-  
+
+  /* Sparat datum och tiden ifrån Kalendern */
+  date: '',
+  time: '',
+
+  /* Spelare och Användare  */
   allUsers: [],
   teamPlayers: [],
 
+  /* Den aktuella användaren och spelaren */
   currentUser: {},
   player: {},
-  
+
+  /* Spel Data */
+  specificTeamData: [],
+  currentGame: [],
+
+  /* Valt lag */
   selectedTeam: '',
 
   /* Skapa lagen och poäng regler */
@@ -16,7 +27,7 @@ export default {
   numberOfEqual: 0,
   
   
-  /* */
+  /* Grupperna ifrån Admin */
   groups : [
     {
       players: [],
