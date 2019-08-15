@@ -46,7 +46,7 @@ export default {
         },
         googleLogin () {
             const provider = new firebase.auth.GoogleAuthProvider();
-            firebase.auth().signInWithRedirect(provider).then(async(result) => {
+            firebase.auth().signInWithPopup(provider).then(async(result) => {
               this.user = firebase.auth().currentUser;
               var items = db.collection('users');
               await items.get().then((querySnapshot) => {
@@ -69,21 +69,21 @@ export default {
           }
           this.$store.dispatch('addUserToDb', user) 
         },
-        loadPage() {     
-          if(this.allUsers.includes(this.user.uid)) {
-            this.$store.dispatch('setLoginNumber', 0)
+        loadPage() {  
+          if(this.allUsers.includes(this.user.uid)) {   
             this.$store.dispatch('setCurrentUser', this.user);         
+            this.$store.dispatch('setLoginNumber', 0)
             this.$router.replace('/loading');
-          } else {
+          } else { 
             this.addUser();
-            this.$store.dispatch('setLoginNumber', 1)
             this.$store.dispatch('setCurrentUser', this.user);  
+            this.$store.dispatch('setLoginNumber', 1)
             this.$router.replace('/addname');            
           }
         },
         facebookLogin () {
           var provider = new firebase.auth.FacebookAuthProvider();
-          firebase.auth().signInWithRedirect(provider).then(async(result) => {
+          firebase.auth().signInWithPopup(provider).then(async(result) => {
               this.user = firebase.auth().currentUser;
               var items = db.collection('users');
               await items.get().then((querySnapshot) => {
