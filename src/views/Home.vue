@@ -83,7 +83,7 @@ export default {
         },
         facebookLogin () {
           var provider = new firebase.auth.FacebookAuthProvider();
-          firebase.auth().signInWithPopup(provider).then(async(result) => {
+          firebase.auth().signInWithRedirect(provider).then(async(result) => {
               this.user = firebase.auth().currentUser;
               var items = db.collection('users');
               await items.get().then((querySnapshot) => {
