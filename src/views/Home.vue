@@ -20,7 +20,9 @@
   </article>
 </template>
 <script>
-import firebase from 'firebase';
+import firebase from 'firebase/app';
+import 'firebase/auth';
+import 'firebase/firestore';
 import db from '@/firebaseInit';
 import Pager from '@/components/Pager.vue';
 export default {
