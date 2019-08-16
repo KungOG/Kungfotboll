@@ -34,20 +34,22 @@
               <label>Antal mål</label> 
               <input type="number" v-model.number="user.goal">
             </section>
+            <section>
+              <img src="@/assets/icon/bin.svg" v-show="show" @click="deleteBtn" class="bin-btn"/> 
+            </section>
           </section>
         </section>
         <section class="editplayer-bottom">
           <section v-if="show" class="edit-player-btn1">
-            <img src="@/assets/icon/bin.svg" @click="deleteBtn" class="bin-btn"/> 
             <img src="@/assets/icon/ok.svg" class="orange-btn" @click="remakePlayer" />
           </section>
           <section v-if="!show" class="edit-player-btn2">
             <p>Välj spelare att överföra</p>
-          <section class="editplayer-list">
-            <section class="editplayer-player" v-for="player in filterPlayers" :key="player.uid">
-              <span @click="markedPlayer = player">{{player.name}}</span>
+            <section class="editplayer-list">
+              <section class="editplayer-player" v-for="player in filterPlayers" :key="player.uid">
+                <p @click="markedPlayer = player">{{player.name}}</p>
+              </section>
             </section>
-          </section>
           <img src="@/assets/icon/ok.svg" class="orange-btn" @click="mergeBtn" />
         </section>
       </section>
