@@ -59,7 +59,7 @@
     .about-page {
       .about-logo {
         img {
-          width: 20rem;
+          width: 18rem;
         }
       }
     }
@@ -148,6 +148,11 @@
       }
     }
     .home-page {
+      .home-admin-login {
+        input {
+          width: 25vw;
+        }
+      }
       .home-login {
         margin-top: 6rem;
       }
@@ -161,7 +166,7 @@
       .admin-logo {    
         margin-bottom: 2rem;    
         img {
-            width: 10rem;
+            width: 15rem;
             position: relative;
             top: 3.6rem;
         }   
@@ -198,6 +203,11 @@
       }
     }
     .home-page {
+      .home-admin-login {
+        input {
+          width: 25vw;
+        }
+      }
       .home-login {
         margin-top: 6rem;
       }
@@ -211,7 +221,7 @@
       .admin-logo {    
         margin-bottom: 2rem;    
         img {
-            width: 10rem;
+            width: 22rem;
             position: relative;
             top: 3.6rem;
         }   
