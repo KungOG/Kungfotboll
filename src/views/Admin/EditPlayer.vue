@@ -7,32 +7,32 @@
         <section class="editplayer-input-field">
           <section class="input-field-name">
             <label>Namn</label>
-            <input type="text" v-model="user.name" maxlength="18" />
+            <input type="text" v-model="user.name" maxlength="18" :disabled="disabled == 1 ? true : false">
           </section>
           <section class="input-field-top">
             <section>
               <label>Antal vinster</label>
-              <input type="number" v-model.number="user.win">
+              <input type="number" v-model.number="user.win" :disabled="disabled == 1 ? true : false">
             </section>
             <section>
               <label>Antal förluster</label>
-              <input type="number" v-model.number="user.loss"> 
+              <input type="number" v-model.number="user.loss" :disabled="disabled == 1 ? true : false"> 
             </section>
           </section>                   
           <section class="input-field-middle">
             <section>
               <label>Antal poäng</label> 
-              <input type="number" v-model.number="user.point">
+              <input type="number" v-model.number="user.point" :disabled="disabled == 1 ? true : false">
             </section>
             <section>
               <label>Antal oavgjort</label> 
-              <input type="number" v-model.number="user.tie">
+              <input type="number" v-model.number="user.tie" :disabled="disabled == 1 ? true : false">
             </section>
           </section>
           <section class="input-field-bottom">
             <section>
               <label>Antal mål</label> 
-              <input type="number" v-model.number="user.goal">
+              <input type="number" v-model.number="user.goal" :disabled="disabled == 1 ? true : false">
             </section>
             <section>
               <img src="@/assets/icon/bin.svg" v-show="show" @click="deleteBtn" class="bin-btn"/> 
@@ -62,6 +62,7 @@ export default {
       return {
         show: true,
         markedPlayer: null,
+        disabled: 0,
         user: {
           name: '',
           win: 0,
@@ -188,6 +189,7 @@ export default {
           } else {
             this.show = true;
           }
+          this.disabled = (this.disabled + 1) % 2
         }
     }
 }
