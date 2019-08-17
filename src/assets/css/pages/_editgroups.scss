@@ -19,6 +19,7 @@
             }
             .player-list {
                 @extend %center;
+                height: 30vh;
                 .list-wrapper {
                     text-align: center;
                     padding: 0;
