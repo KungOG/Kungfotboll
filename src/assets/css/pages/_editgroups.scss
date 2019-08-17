@@ -24,6 +24,15 @@
                     text-align: center;
                     padding: 0;
                     width: 95vw;
+                    .player-container {
+                        display: flex;
+                        justify-content: center;
+                        aside {
+                            font-size: 1.7rem;
+                            justify-self: flex-start;
+                            color: gray;
+                        }
+                    }
                 }
             }
 

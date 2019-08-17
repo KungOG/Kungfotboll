@@ -11,6 +11,9 @@
                 <section class="player-list">          
                     <section class="list-wrapper" v-for="(player, index) in filterPlayers" :player="player" :key="index">
                         <section class="player-container" @click="editGroup(player)" >
+                            <aside>
+                                +
+                            </aside>
                             <p>{{player.name}}</p>
                         </section>
                     </section>
