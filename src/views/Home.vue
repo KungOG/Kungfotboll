@@ -56,6 +56,7 @@ export default {
                   this.allUsers.push(doc.id)
                 })
               })
+              localStorage.setItem('id', 'user')
               this.loadPage();
             }).catch((err) => {
               alert('Whops, något hände! Prova igen lite senare!')

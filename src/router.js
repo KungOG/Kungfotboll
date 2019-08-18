@@ -191,33 +191,13 @@ router.beforeEach((to, from, next) => {
     checkPermission()
   }
   async function checkUser () {
-    var allAdminUsers = [];
-    var allUsers = [];
-    var allSuperAdmins = [];
-    
-    var adminItems = db.collection('admins');
-    await adminItems.get().then((querySnapshot) => {
-      querySnapshot.forEach((doc) => {
-        allAdminUsers.push(doc.id)
-      })
-    })
-    var items = db.collection('users');
-    await items.get().then((querySnapshot) => {
-      querySnapshot.forEach((doc) => {
-        allUsers.push(doc.id)
-      })
-    })
-    var superAdminItems = db.collection('superAdmin');
-    await superAdminItems.get().then((querySnapshot) => {
-      querySnapshot.forEach((doc) => {
-        allSuperAdmins.push(doc.id)
-      })
-    })
-        
-        var user = allUsers.indexOf(firebase.auth().currentUser.uid)
-        var adminUser = allAdminUsers.indexOf(firebase.auth().currentUser.uid)
-        var superAdmin = allSuperAdmins.indexOf(firebase.auth().currentUser.uid)
-        if (user !== -1) {
+    var id = localStorage.getItem('id')
+    console.log(id)
+
+
+
+
+        if (id == 'user') {
           index.dispatch('setCurrentUser', firebase.auth().currentUser)
           routerUserCheck = firebase.auth().currentUser;
           if (index.state.loginNumber === 1) {
@@ -225,12 +205,12 @@ router.beforeEach((to, from, next) => {
           } else if(index.state.loginNumber === 0) {
             next('/loading');
           }
-        } else if (adminUser !== -1) {
+        } else if (id == 'admin') {
           index.dispatch('setAdminUser', firebase.auth().currentUser)
           routerAdminCheck = firebase.auth().currentUser;
           next('/admin');
           
-        } else if (superAdmin !== -1) {
+        } else if (id == 'superadmin') {
           index.dispatch('setSuperAdmin', firebase.auth().currentUser)
           routerSuperAdminCheck = firebase.auth().currentUser;
           next('/superadmin');
