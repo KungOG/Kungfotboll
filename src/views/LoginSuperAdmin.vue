@@ -23,6 +23,7 @@ export default {
             firebase.auth().signInWithPopup(provider).then(async(result) => {
                 let user = firebase.auth().currentUser;
                 this.$store.dispatch('setSuperAdmin', user)
+                localStorage.setItem('id', 'superadmin')
                 setTimeout(() => this.$router.push({
                     path: '/superadmin'
                 }), 1000);

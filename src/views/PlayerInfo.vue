@@ -90,9 +90,9 @@ export default {
             this.$store.dispatch('setSelectedTeam', this.selectedTeam);
       },
       async logout(){
+        this.$router.push('/');
         await firebase.auth().signOut();
         this.$store.dispatch('removeCurrentUser');
-        this.$router.push('/');
       },
       remove(){
         swal({

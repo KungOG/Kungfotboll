@@ -53,9 +53,9 @@ export default {
             this.$router.push('/about')  
         },
         async logout(){
+            this.$router.push('/');
             await firebase.auth().signOut();
             this.$store.dispatch('removeCurrentAdminUser');
-            this.$router.push('/');
         }
     }
 }

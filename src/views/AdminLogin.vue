@@ -35,6 +35,7 @@ export default {
                 .then(adminUser => {
                     this.adminUser = firebase.auth().currentUser;
                     this.setAdmin();
+                    localStorage.setItem('id', 'admin')
                     setTimeout(() => this.$router.push({
                         path: '/admin'
                     }), 1000);
