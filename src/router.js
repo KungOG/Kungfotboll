@@ -181,45 +181,41 @@ const router = new Router({
 })
 
 router.beforeEach((to, from, next) => {
-  var routerUserCheck = null;
-  var routerAdminCheck = null;
-  var routerSuperAdminCheck = null;
+  var routerUserCheck = index.state.currentUser;
+  var routerAdminCheck = index.state.adminUser;
+  var routerSuperAdminCheck = index.state.superAdminUser;
   var id = localStorage.getItem('id')
-
-  if(id === 'user') {
-    routerUserCheck = 'ok'
-  } else if (id === 'admin') {
-    routerAdminCheck = 'ok'
-  } else if (id === 'superadmin') {
-    routerSuperAdminCheck = 'ok'
-  } 
   
   if (!routerUserCheck && !routerAdminCheck && !routerSuperAdminCheck && firebase.auth().currentUser) {
     checkUser();
-  } else if (!routerUserCheck && !routerAdminCheck && !routerSuperAdminCheck && !firebase.auth().currentUser) {
+  } 
+  else if (!routerUserCheck && !routerAdminCheck && !routerSuperAdminCheck && !firebase.auth().currentUser) {
     checkPermission()
-  } else {
+  } 
+  else if (routerUserCheck || routerAdminCheck || routerSuperAdminCheck && firebase.auth().currentUser) {
+    checkPermission()
+  } 
+  else {
     checkPermission()
   }
   async function checkUser () {
-    
-    console.log(id)
         if (id == 'user') {
-          console.log('inne')
+          index.state.currentUser = 'ok';
           index.dispatch('setCurrentUser', firebase.auth().currentUser)
           routerUserCheck = 'ok';
           if (index.state.loginNumber === 1) {
-            console.log('laddname')
             next('/addName');
           } else if(index.state.loginNumber === 0) {
             next('/loading');
-          }
+          }  
         } else if (id == 'admin') {
+          index.state.adminUser = 'ok';
           index.dispatch('setAdminUser', firebase.auth().currentUser)
           routerAdminCheck = 'ok';
           next('/admin');
           
         } else if (id == 'superadmin') {
+          index.state.superAdminUser = 'ok';
           index.dispatch('setSuperAdmin', firebase.auth().currentUser)
           routerSuperAdminCheck = 'ok';
           next('/superadmin');

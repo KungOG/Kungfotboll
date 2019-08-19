@@ -56,6 +56,7 @@ export default {
             this.$router.push('/');
             await firebase.auth().signOut();
             this.$store.dispatch('removeCurrentAdminUser');
+            localstorage.removeItem('id');
         }
     }
 }

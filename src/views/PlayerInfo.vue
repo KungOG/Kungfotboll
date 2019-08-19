@@ -93,6 +93,7 @@ export default {
         this.$router.push('/');
         await firebase.auth().signOut();
         this.$store.dispatch('removeCurrentUser');
+        localstorage.removeItem('id');
       },
       remove(){
         swal({
