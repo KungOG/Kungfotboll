@@ -1,6 +1,9 @@
 @media screen and (min-width: 1300px) {
   body {
     background-color:black !important;
+    .calendar-page .calendar .date-container input {
+      width: 30vw;
+    }
     .player-page {
       .player-logo {
         .crown {
