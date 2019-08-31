@@ -8,10 +8,12 @@
                 <router-link to="/schedules">Schema</router-link>
             </Slide>
         <section>
+            <transition name="fade">
             <article class="info-container" v-if="show" @click="edit">
                 <p>ANTAL LAG:</p>
                 <h3> {{ numberOfTeams }}</h3>
             </article>
+            </transition>
             <article v-if="!show" class="btn-container">
                 <h1>VÄLJ ANTAL LAG</h1> 
                 <article v-if="!show" class="setup-btn">

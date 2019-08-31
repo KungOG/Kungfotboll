@@ -1,9 +1,11 @@
 <template>
      <main class="makegames">
-        <article class="info-container" v-if="show" @click="edit">
-            <p>POÄNG PER VINST:</p>
-            <h3> {{ numberOfWin }}</h3>            
-        </article>
+        <transition name="fade">
+            <article class="info-container" v-if="show" @click="edit">
+                <p>POÄNG PER VINST:</p>
+                <h3> {{ numberOfWin }}</h3>            
+            </article>
+        </transition>
         <article v-if="!show" class="btn-container">
             <h1>VÄLJ ANTAL POÄNG PER VINST</h1>
             <article v-if="!show" class="setup-btn">

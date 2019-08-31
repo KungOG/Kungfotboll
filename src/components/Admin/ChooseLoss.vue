@@ -1,9 +1,11 @@
 <template>
     <main class="makegames">
+        <transition name="fade">
             <article class="info-container" v-if="show" @click="edit">
                 <p>POÄNG PER FÖRLUST:</p>
                 <h3> {{ numberOfLoss }}</h3>            
             </article>
+        </transition>
             <article v-if="!show" class="btn-container">
                 <h1>VÄLJ ANTAL POÄNG PER FÖRLUST</h1>
                 <article v-if="!show" class="setup-btn">

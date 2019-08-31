@@ -1,9 +1,11 @@
 <template>
     <main class="makegames">
+        <transition name="fade">
             <article class="info-container" v-if="show" @click="edit">
                 <p>ANTAL OMGÅNGAR:</p>
                 <h3> {{ numberOfGames }}</h3>            
             </article>
+            </transition>
             <article v-if="!show" class="btn-container">
                 <h1>VÄLJ ANTAL OMGÅNGAR</h1>
                 <article v-if="!show" class="setup-btn">

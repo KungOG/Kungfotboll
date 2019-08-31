@@ -6,6 +6,13 @@
         justify-content: flex-end;
         height: 100vh;
         align-items: center;
+        .fade-enter-active, .fade-leave-active {
+            transition: opacity 0.25s ease-out;
+          }
+          
+          .fade-enter, .fade-leave-to {
+            opacity: 0;
+          }
         .info-container {
             border-radius: 3px;
             background: white;

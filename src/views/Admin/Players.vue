@@ -17,7 +17,7 @@
         <section class="list-wrapper" v-for="(player, index) in filterUsers" :key="index" @click="$router.push(`/editplayer/${player.uid}`)">
           <section class="container">
             <section>
-              <h3>{{player.name}}</h3>
+              <h3>{{player.name}}</h3>    
             </section>
             <section class="score">
               <article>

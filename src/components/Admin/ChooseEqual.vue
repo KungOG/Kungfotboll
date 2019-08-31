@@ -1,9 +1,11 @@
 <template>
     <main :class="{ equal: show == true, makegames: show == false}">
+        <transition name="fade">
         <article class="info-container" v-if="show" @click="edit">
             <p>POÄNG PER OAVGJORD:</p>
             <h3> {{ numberOfEqual }}</h3>            
         </article>
+        </transition>
         <article v-if="!show" class="btn-container">
             <h1>VÄLJ ANTAL POÄNG PER OAVGJORD</h1>
             <article v-if="!show" class="setup-btn">                
