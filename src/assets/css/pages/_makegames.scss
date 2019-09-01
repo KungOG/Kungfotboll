@@ -7,12 +7,13 @@
         height: 100vh;
         align-items: center;
         .fade-enter-active, .fade-leave-active {
-            transition: opacity 0.25s ease-out;
+            transition: all 0.5s ease-out;
+            transform: translateY(0px);
           }
-          
-          .fade-enter, .fade-leave-to {
+        .fade-enter, .fade-leave-to {
             opacity: 0;
-          }
+            transform: translateY(15px);
+        }
         .info-container {
             border-radius: 3px;
             background: white;

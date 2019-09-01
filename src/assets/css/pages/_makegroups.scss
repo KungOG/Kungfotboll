@@ -4,7 +4,26 @@
     display: flex; 
     flex-direction: column;
     height: 90vh;
+    width: 100vw;
     text-align: center;
+    .slide-enter-active, .slide-leave-active {
+      transition: all 0.5s ease-out;
+      transform: translateX(0px);
+      position: absolute;
+    }
+    .slide-enter {
+      opacity: 0.3;
+      transform: translateX(0px);
+      width: 100vw;
+    } 
+    .slide-leave-to {
+        opacity: 0.3;
+        transform: translateX(150px);
+        width: 100vw;
+    }
+    .slide-move {
+      transition: transform 1s;
+    }
     p {
       margin: 0;
       font-size: 0.7rem;

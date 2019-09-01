@@ -7,9 +7,11 @@
         </section>
         <section class="container">
             <p>SWIPA HÖGER FÖR ATT TA BORT SPELARE UR LISTAN</p>
-            <article class="playerlist">         
-                <groupplayer v-for="player in players" :key="player.uid" :player="player" @setColor="setColor" @deleteAssignedPlayer="deleteAssignedPlayer"/>
-            </article>
+                <article class="playerlist">         
+                    <transition-group name="slide">
+                        <groupplayer v-for="player in players" :key="player.uid" :player="player" @setColor="setColor" @deleteAssignedPlayer="deleteAssignedPlayer"/>
+                    </transition-group>
+                </article>
             <img src="@/assets/icon/ok.svg" class="orange-btn" @click="submitGroups" v-show="teams.length >= 4" />
         </section>
     </main>
