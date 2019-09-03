@@ -4,12 +4,10 @@ import index from './store/'
 import firebase from 'firebase/app';
 import 'firebase/auth';
 import 'firebase/firestore';
-import db from '@/firebaseInit'
 
 Vue.use(Router)
 
 const router = new Router({
-  mode: 'history',
   base: process.env.BASE_URL,
   routes: [
     {
@@ -199,31 +197,30 @@ router.beforeEach((to, from, next) => {
     checkPermission()
   }
   async function checkUser () {
-        if (id == 'user') {
-          index.state.currentUser = 'ok';
-          index.dispatch('setCurrentUser', firebase.auth().currentUser)
-          routerUserCheck = 'ok';
-          if (index.state.loginNumber === 1) {
-            next('/addName');
-          } else if(index.state.loginNumber === 0) {
-            next('/loading');
-          }  
-        } else if (id == 'admin') {
-          index.state.adminUser = 'ok';
-          index.dispatch('setAdminUser', firebase.auth().currentUser)
-          routerAdminCheck = 'ok';
-          next('/admin');
-          
-        } else if (id == 'superadmin') {
-          index.state.superAdminUser = 'ok';
-          index.dispatch('setSuperAdmin', firebase.auth().currentUser)
-          routerSuperAdminCheck = 'ok';
-          next('/superadmin');
-        } 
-      }
+    if (id == 'user') {
+      index.state.currentUser = 'ok';
+      index.dispatch('setCurrentUser', firebase.auth().currentUser)
+      routerUserCheck = 'ok';
+      if (index.state.loginNumber === 1) {
+        next('/addName');
+      } else if(index.state.loginNumber === 0) {
+        next('/loading');
+      }  
+    } else if (id == 'admin') {
+      index.state.adminUser = 'ok';
+      index.dispatch('setAdminUser', firebase.auth().currentUser)
+      routerAdminCheck = 'ok';
+      next('/admin');
+      
+    } else if (id == 'superadmin') {
+      index.state.superAdminUser = 'ok';
+      index.dispatch('setSuperAdmin', firebase.auth().currentUser)
+      routerSuperAdminCheck = 'ok';
+      next('/superadmin');
+    } 
+  }
        
   function checkPermission () {
-    console.log('permission')
     if (to.matched.some(record => record.meta.requiresAuth)) {
       if (routerUserCheck) {
         next();      
